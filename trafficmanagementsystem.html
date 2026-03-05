@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Traffic Location Monitoring</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+background:#f4f4f4;
+}
+
+header{
+background:#333;
+color:white;
+padding:15px;
+}
+
+table{
+margin:auto;
+border-collapse:collapse;
+width:60%;
+background:white;
+}
+
+th,td{
+border:1px solid gray;
+padding:10px;
+}
+
+button{
+padding:8px;
+background:green;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+.heavy{color:red;font-weight:bold;}
+.medium{color:orange;font-weight:bold;}
+.low{color:green;font-weight:bold;}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h2>Traffic Monitoring System</h2>
+<p>Update traffic only if you are near the location</p>
+</header>
+
+<br>
+
+<button onclick="getLocation()">Check My Location</button>
+
+<p id="locationStatus"></p>
+
+<table>
+
+<tr>
+<th>Location</th>
+<th>Traffic</th>
+<th>Update</th>
+</tr>
+
+<tr>
+<td>Shivajinagar</td>
+<td id="t1" class="low">Low</td>
+<td><button id="btn1" onclick="changeTraffic('t1')" disabled>Update</button></td>
+</tr>
+
+</table>
+
+<script>
+
+var userLat,userLon
+
+// Shivajinagar coordinates
+var locLat=18.5308
+var locLon=73.8475
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(showPosition)
+
+}
+else{
+document.getElementById("locationStatus").innerHTML="Geolocation not supported"
+}
+
+}
+
+function showPosition(position){
+
+userLat=position.coords.latitude
+userLon=position.coords.longitude
+
+document.getElementById("locationStatus").innerHTML=
+"Your Location: "+userLat+" , "+userLon
+
+checkDistance()
+
+}
+
+function checkDistance(){
+
+var distance=Math.sqrt(
+Math.pow(userLat-locLat,2)+
+Math.pow(userLon-locLon,2)
+)
+
+if(distance<0.05){
+
+document.getElementById("btn1").disabled=false
+document.getElementById("locationStatus").innerHTML+="<br>You are near Shivajinagar. You can update traffic."
+
+}
+else{
+
+document.getElementById("locationStatus").innerHTML+="<br>You are not near the location. Update disabled."
+
+}
+
+}
+
+function changeTraffic(id){
+
+var status=document.getElementById(id)
+
+if(status.innerHTML=="Low"){
+status.innerHTML="Medium"
+status.className="medium"
+}
+
+else if(status.innerHTML=="Medium"){
+status.innerHTML="Heavy"
+status.className="heavy"
+}
+
+else{
+status.innerHTML="Low"
+status.className="low"
+}
+
+}
+
+</script>
+
+</body>
+</html>
